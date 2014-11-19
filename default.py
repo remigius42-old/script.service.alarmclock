@@ -9,7 +9,7 @@ from cronjobs import CronTab, Job
 
 class AlarmClock:
   """Main alarm clock application class."""
-  
+
   def __init__(self):
     self.addon = xbmcaddon.Addon()
     self.crontab = CronTab(xbmc)
@@ -63,7 +63,7 @@ class AlarmClock:
               int(self.addon.getSetting("hour%d" % number)),
               dow=daysOfWeek,
                     args=[file, self.addon.getSetting("volume%d" % number)])]
-    
+
     if self.addon.getSetting("turnOff%d" % number) == "true":
       jobs.append(Job(self._stopPlaying,
           int(self.addon.getSetting("minute%d" % number))
@@ -98,7 +98,7 @@ class AlarmClockMonitor(xbmc.Monitor):
 
 
   def onAbortRequested(self):
-    self.alarmClock.stop()    
+    self.alarmClock.stop()
 
 
 

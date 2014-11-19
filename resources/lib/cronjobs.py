@@ -20,10 +20,10 @@ class CronTab(object):
     while self.__enabled:
       if self.xbmc and not self.xbmc.abortRequested:
         for job in self.jobs:
-          self.xbmc.log("checking job %s against %s" % (str(job), str(t)), 
+          self.xbmc.log("checking job %s against %s" % (str(job), str(t)),
                           self.xbmc.LOGDEBUG)
           job.check(t)
-      
+
         t += timedelta(minutes=1)
         if datetime.now() < t:
           if self.xbmc:
