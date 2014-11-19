@@ -75,6 +75,11 @@ class AlarmClock:
 
 
   def _play(self, item, volume):
+    try:
+      xbmc.executebuiltin('CECActivateSource')
+    except:
+      pass
+
     xbmc.executebuiltin('SetVolume(%s)' % volume)
     xbmc.Player().play(item)
 
