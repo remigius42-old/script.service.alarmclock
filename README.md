@@ -9,6 +9,7 @@ or an URL on repeat.
   - Scheduling for a week day, every day or Monday to Friday
   - Plays either a file or a custom path may be set which may point to any
       media type supported by XBMC including for example web radio URLs
+  - Tries to activate the configured HDMI device over CEC
 
 #Notes
   - If the duration is over, XBMC will stop playing regardless of what is
@@ -31,3 +32,4 @@ or an URL on repeat.
     and
     http://colouringbook.org/art/svg/coloring-book/orologio-clock-alarm-icon-coloring-book-colouring-coloring-book-colouring-book-colouringbook-org-art-clip-art-clipart-clipartist-net-openclipart-org-scalable-vector-graphics-svg/
    
+  - Activation of HDMI device with CECActivateSource added by pull request by https://github.com/anonymouzz
