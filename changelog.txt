@@ -1,2 +1,7 @@
+v0.0.43
+ - Tries to activate configured HDMI device by using the built-in
+   command "CECActivateSource" (thanks go to anonymouzz)
+ - Increased PEP8 conformity
+
 v0.0.42
  - First official revision
