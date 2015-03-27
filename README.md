@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/remigius42/script.service.alarmclock.svg?branch=master)](https://travis-ci.org/remigius42/script.service.alarmclock)
+
 xbmc-alarm-clock
 ================
 
