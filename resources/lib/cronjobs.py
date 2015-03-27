@@ -38,7 +38,8 @@ class AllMatch(set):
 
     """Universal set - match everything"""
 
-    def __contains__(self, item): return True
+    def __contains__(self, item):
+        return True
 
 
 class Job(object):
