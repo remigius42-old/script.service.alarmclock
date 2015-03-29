@@ -5,5 +5,5 @@ install:
   - pip install pep8
 script:
   - pep8 --ignore=E402 .
-  - cd resources/lib/tests
-  - python -m unittest discover -v -t ..
+  - cd resources/lib
+  - python -m unittest discover -v
