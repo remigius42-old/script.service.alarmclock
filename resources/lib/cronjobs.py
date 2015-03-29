@@ -1,3 +1,10 @@
+"""Cronjob like scheduling abstraction in Python.
+
+This module contains the functionality used by the Kodi Alarm clock
+addon and is largely based on a Stackoverflow answer by
+Brian on http://stackoverflow.com/questions/
+373335/suggestions-for-a-cron-like-scheduler-in-python/374207#374207"""
+
 from datetime import datetime, timedelta
 import time
 
@@ -18,20 +25,22 @@ class CronTab(object):
 
     def start(self):
         """Starts to check every minute, if the registered jobs should run."""
-        t = datetime(*datetime.now().timetuple()[:5])
+        cron_time_tuple = datetime(*datetime.now().timetuple()[:5])
         while self.__enabled:
             if self.xbmc and not self.xbmc.abortRequested:
                 for job in self.jobs:
                     self.xbmc.log("checking job %s against %s" %
-                                  (str(job), str(t)), self.xbmc.LOGDEBUG)
-                    job.check(t)
+                                  (str(job), str(cron_time_tuple)),
+                                  self.xbmc.LOGDEBUG)
+                    job.check(cron_time_tuple)
 
-                t += timedelta(minutes=1)
-                if datetime.now() < t:
+                cron_time_tuple += timedelta(minutes=1)
+                if datetime.now() < cron_time_tuple:
                     if self.xbmc:
-                        self.xbmc.sleep((t - datetime.now()).seconds * 1000)
+                        self.xbmc.sleep((cron_time_tuple -
+                                         datetime.now()).seconds * 1000)
                     else:
-                        time.sleep((t - datetime.now()).seconds)
+                        time.sleep((cron_time_tuple - datetime.now()).seconds)
 
 
 class AllMatch(set):
@@ -43,10 +52,10 @@ class AllMatch(set):
 
 
 class Job(object):
-
+    # pylint: disable=too-many-instance-attributes,too-many-arguments
     """Cron job abstraction."""
-
-    def conv_to_set(self, obj):
+    @staticmethod
+    def conv_to_set(obj):
         """Convert obj to a set containing obj if necessary."""
         if isinstance(obj, (int, long)):
             return set([obj])
@@ -54,16 +63,18 @@ class Job(object):
             obj = set(obj)
         return obj
 
-    def __init__(self, action, min=AllMatch(), hour=AllMatch(),
+    def __init__(self, action, minute=AllMatch(), hour=AllMatch(),
                  day=AllMatch(), month=AllMatch(), dow=AllMatch(),
-                 args=(), kwargs={}):
-        self.mins = self.conv_to_set(min)
-        self.hours = self.conv_to_set(hour)
-        self.days = self.conv_to_set(day)
-        self.months = self.conv_to_set(month)
-        self.dow = self.conv_to_set(dow)
+                 args=(), kwargs=None):
+        self.mins = Job.conv_to_set(minute)
+        self.hours = Job.conv_to_set(hour)
+        self.days = Job.conv_to_set(day)
+        self.months = Job.conv_to_set(month)
+        self.dow = Job.conv_to_set(dow)
         self.action = action
         self.args = args
+        if kwargs is None:
+            kwargs = {}
         self.kwargs = kwargs
 
     def __str__(self):
@@ -72,15 +83,15 @@ class Job(object):
             + str(self.dow) + ", " + str(self.action) + ", "\
             + str(self.args) + ", " + str(self.kwargs)
 
-    def is_matchtime(self, t):
+    def is_matchtime(self, cron_time_tuple):
         """Is it the job's scheduled time"""
-        return ((t.minute in self.mins) and
-                (t.hour in self.hours) and
-                (t.day in self.days) and
-                (t.month in self.months) and
-                (t.weekday() in self.dow))
+        return ((cron_time_tuple.minute in self.mins) and
+                (cron_time_tuple.hour in self.hours) and
+                (cron_time_tuple.day in self.days) and
+                (cron_time_tuple.month in self.months) and
+                (cron_time_tuple.weekday() in self.dow))
 
-    def check(self, t):
+    def check(self, cron_time_tuple):
         """Checks if it is the scheduled time and executes the job if so."""
-        if self.is_matchtime(t):
+        if self.is_matchtime(cron_time_tuple):
             self.action(*self.args, **self.kwargs)
